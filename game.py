@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
 from random import randint
+from tkmacosx import Button
 
 
 class DragonTiger:
@@ -10,8 +11,6 @@ class DragonTiger:
         self.__user_chips = 10000
         self.__passConfirm = FALSE
         self.__passChoose = FALSE
-
-        self.gui.resizable(0, 0)
 
         self.image = Image.open("img/background.png")
         self.img_copy = self.image.copy()
@@ -24,9 +23,20 @@ class DragonTiger:
 
         # self.background.bind('<Configure>', self._resize_image)
 
-        self.gui.geometry("1000x750")
         self.gui.title("Dragon Tiger")
-        # self.gui.iconbitmap(r'img/cards1.ico')
+
+        w = 900
+        h = 700
+
+        # Get the screen dimensions
+        sw = self.gui.winfo_screenwidth()
+        sh = self.gui.winfo_screenheight()
+
+        # Find the center of the point
+        cx = int(sw/2 - h/2)
+        cy = int(sh/2 - w/2)
+        self.gui.geometry(f'{w}x{h}+{cx}+{cy}')
+        self.gui.resizable(False, False)
 
         self.__img = Image.open("img/back_card1.png")
         self.__img = self.__img.resize((int(self.__img.width * .36), int(self.__img.height * .36)))
@@ -56,15 +66,13 @@ class DragonTiger:
         self.check = Button(self.gui, text="CONFIRM", command=self.confirm, pady=12, font=(None, 30, 'bold'))
         self.check.place(relx=0.55, rely=0.90, anchor=CENTER)
 
-        self.dragon = Button(self.gui, text="DRAGON", fg='red', command=self.choose_dragon, pady=12, font=(None, 30, 'bold'))
+        self.dragon = Button(self.gui, text="DRAGON", command=self.choose_dragon, pady=12, font=(None, 30, 'bold'))
         self.dragon.place(relx=0.3, rely=0.55, anchor=CENTER)
 
-        self.tiger = Button(self.gui, text="TIGER", fg='blue', command=self.choose_tiger, pady=12,
-                            font=('', 30, 'bold'))
+        self.tiger = Button(self.gui, text="TIGER", command=self.choose_tiger, pady=12, font=('', 30, 'bold'))
         self.tiger.place(relx=0.75, rely=0.55, anchor=CENTER)
 
-        self.tiger = Button(self.gui, text="DRAW", fg='white', bg='black', command=self.choose_draw, pady=12, font=(None, 30, 'bold'))
-
+        self.tiger = Button(self.gui, text="DRAW", command=self.choose_draw, pady=12, font=(None, 30, 'bold'))
         self.tiger.place(relx=0.53, rely=0.32, anchor=CENTER)
 
         self.check = Button(self.gui, text="EXIT", fg='red', command=self.exit, pady=12, font=(None, 30, 'bold'))
@@ -102,13 +110,13 @@ class DragonTiger:
     def img1(self):
         return self.__img1
 
+    @img1.setter
+    def img1(self, img1):
+        self.__img1 = img1
+
     @property
     def img(self):
         return self.__img
-
-    @img.setter
-    def img1(self, img1):
-        self.__img1 = img1
 
     @img.setter
     def img(self, img):
@@ -140,20 +148,38 @@ class DragonTiger:
 
     def display(self):
         if self.__choose == 0:
-            self.txt = Label(text="Dragon", bg="lightgreen")
-            self.txt.place(relx=0.5, rely=0.7, anchor=CENTER)
+            self.dragon = Button(
+                self.gui, text="DRAGON", bg='red', fg='white', command=self.choose_dragon, pady=12,
+                font=(None, 30, 'bold')
+            )
+            self.dragon.place(relx=0.3, rely=0.55, anchor=CENTER)
+            self.tiger = Button(self.gui, text="TIGER", command=self.choose_tiger, pady=12, font=('', 30, 'bold'))
+            self.tiger.place(relx=0.75, rely=0.55, anchor=CENTER)
+            self.tiger = Button(self.gui, text="DRAW", command=self.choose_draw, pady=12, font=(None, 30, 'bold'))
+            self.tiger.place(relx=0.53, rely=0.32, anchor=CENTER)
             self.__passChoose = TRUE
+
         elif self.__choose == 1:
-            self.txt = Label(text="  Tiger  ", bg="lightgreen")
-            self.txt.place(relx=0.5, rely=0.7, anchor=CENTER)
+            self.tiger = Button(self.gui, text="TIGER", bg='blue', fg='white', command=self.choose_tiger, pady=12,
+                                font=('', 30, 'bold'))
+            self.tiger.place(relx=0.75, rely=0.55, anchor=CENTER)
+            self.dragon = Button(self.gui, text="DRAGON", command=self.choose_dragon, pady=12, font=(None, 30, 'bold'))
+            self.dragon.place(relx=0.3, rely=0.55, anchor=CENTER)
+            self.tiger = Button(self.gui, text="DRAW", command=self.choose_draw, pady=12, font=(None, 30, 'bold'))
+            self.tiger.place(relx=0.53, rely=0.32, anchor=CENTER)
             self.__passChoose = TRUE
+
         elif self.__choose == 2:
-            self.txt = Label(text="  Draw  ", bg="lightgreen")
-            self.txt.place(relx=0.5, rely=0.7, anchor=CENTER)
+            self.tiger = Button(
+                self.gui, text="DRAW", bg='lightgreen', fg='white', command=self.choose_draw, pady=12,
+                font=(None, 30, 'bold')
+            )
+            self.tiger.place(relx=0.53, rely=0.32, anchor=CENTER)
+            self.dragon = Button(self.gui, text="DRAGON", command=self.choose_dragon, pady=12, font=(None, 30, 'bold'))
+            self.dragon.place(relx=0.3, rely=0.55, anchor=CENTER)
+            self.tiger = Button(self.gui, text="TIGER", command=self.choose_tiger, pady=12, font=('', 30, 'bold'))
+            self.tiger.place(relx=0.75, rely=0.55, anchor=CENTER)
             self.__passChoose = TRUE
-        else:
-            self.txt = Label(text="Select", bg="lightgreen")
-            self.txt.place(relx=0.5, rely=0.7, anchor=CENTER)
 
     def choose_dragon(self):
         self.__choose = 0
@@ -189,7 +215,6 @@ class DragonTiger:
                 else:
 
                     messagebox.showinfo("Success", "Bet Successful")
-                    # self.open_card()
                     self.__passConfirm = TRUE
                     if self.__passChoose == TRUE:
                         Dragon = randint(1, 13)
@@ -232,8 +257,9 @@ class DragonTiger:
                                 self.__user_chips = self.__user_chips - (int(self.__val) / 2)
                                 messagebox.showinfo("You Lose", " - " + str((int(self.__val) / 2)) + " Chips")
 
-                        self.__chip1 = Label(text=f"Chips   :  {self.__user_chips}  ")
-                        self.__chip1.place(relx=0.05, rely=0.05, anchor=CENTER)
+                        self.__chip1 = Label(text=f"Chips   :  {self.__user_chips}", pady=12, font=(None, 45, 'bold'))
+                        self.__chip1.place(relx=0.53, rely=0.05, anchor=CENTER)
+
                         self.__passChoose = FALSE
                         self.__passConfirm = FALSE
                         self.__choose = 99
@@ -243,56 +269,6 @@ class DragonTiger:
                         messagebox.showerror("Error", "Betting  Unsuccessful")
             except ValueError:
                 messagebox.showerror("Error", "Error message")
-
-    def open_card(self):
-        if (self.__passConfirm == TRUE and self.__passChoose == TRUE):
-            Dragon = randint(1, 13)
-            Tiger = randint(1, 13)
-
-            opDragon = randint(1, 4)
-            opTiger = randint(1, 4)
-
-            self.imgDra = Image.open("img/cards/" + str(Dragon) + "_" + str(opDragon) + ".PNG")
-            self.photoDra = ImageTk.PhotoImage(self.imgDra)
-            self.imgTi = Image.open("img/cards/" + str(Tiger) + "_" + str(opTiger) + ".PNG")
-            self.photoTi = ImageTk.PhotoImage(self.imgTi)
-            self.__lbl = Label(image=self.photoDra)
-            self.__lbl1 = Label(image=self.photoTi)
-            self.__lbl.place(relx=0.3, rely=0.3, anchor=CENTER)
-            self.__lbl1.place(relx=0.75, rely=0.3, anchor=CENTER)
-
-            win = 99
-            if (Dragon < Tiger):
-                win = 1
-            elif (Dragon > Tiger):
-                win = 0
-            elif (Dragon == Tiger):
-                win = 2
-
-            if (self.__choose == win):
-                if (win != 2):
-                    self.__val = int(self.__val) * 1
-                else:
-                    self.__val = int(self.__val) * 7
-                self.__user_chips = self.__user_chips + int(self.__val)
-                messagebox.showinfo("You Win", " + " + str(self.__val) + " Chips")
-            else:
-                if (win != 2):
-                    self.__user_chips = self.__user_chips - int(self.__val)
-                    messagebox.showinfo("You Lose", " - " + str(self.__val) + " Chips")
-                else:
-                    self.__user_chips = self.__user_chips - (int(self.__val) / 2)
-                    messagebox.showinfo("You Lose", " - " + str((int(self.__val) / 2)) + " Chips")
-
-            self.__chip1 = Label(text=f"Chips   :  {self.__user_chips}  ")
-            self.__chip1.place(relx=0.05, rely=0.05, anchor=CENTER)
-            self.__passChoose = FALSE
-            self.__passConfirm = FALSE
-            self.__choose = 99
-            self.display()
-
-        else:
-            messagebox.showerror("Error", "Betting  Unsuccessful")
 
     def _resize_image(self, event):
 
