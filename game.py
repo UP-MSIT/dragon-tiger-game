@@ -13,56 +13,65 @@ class DragonTiger:
 
         self.gui.resizable(0, 0)
 
-        self.canvas = Canvas(self.gui, height=360, width=1333)
-        self.canvas.pack()
-
         self.image = Image.open("img/background.png")
         self.img_copy = self.image.copy()
 
-        self.background_image = ImageTk.PhotoImage(self.image)
+        # self.background_image = ImageTk.PhotoImage(self.image)
 
         # self.background = Label(self.gui, image=self.background_image)
         # self.background.pack(fill=BOTH, expand=YES)
-        self.bg_label = self.canvas.create_image((0, 0), image=self.background_image, anchor=N + W)
-
+        # self.bg_label = self.canvas.create_image((0, 0), image=self.background_image, anchor=N + W)
 
         # self.background.bind('<Configure>', self._resize_image)
 
-        self.gui.geometry("900x600")
+        self.gui.geometry("1000x750")
         self.gui.title("Dragon Tiger")
         # self.gui.iconbitmap(r'img/cards1.ico')
 
-        self.__img = Image.open("img/back_card.png")
-        self.__img = self.__img.resize((int(self.__img.width * .2), int(self.__img.height * .2)))
+        self.__img = Image.open("img/back_card1.png")
+        self.__img = self.__img.resize((int(self.__img.width * .36), int(self.__img.height * .36)))
+
+        self.__img1 = Image.open("img/back_card.png")
+        self.__img1 = self.__img1.resize((int(self.__img1.width * .2), int(self.__img1.height * .2)))
+
         photo = ImageTk.PhotoImage(self.__img)
+        photo1 = ImageTk.PhotoImage(self.__img1)
 
         self.__lbl = Label(image=photo)
-        self.__lbl2 = Label(image=photo)
+        self.__lbl2 = Label(image=photo1)
+
         self.__lbl.place(relx=0.3, rely=0.3, anchor=CENTER)
         self.__lbl2.place(relx=0.75, rely=0.3, anchor=CENTER)
 
         bets = Label(self.gui, text="BET: ", font=('', 45, 'bold'))
-        # bets = self.canvas.create_text((410, 120), text='BET: ', font=('', 45, 'bold'), fill="#652828")
-        self.__input_bet = Entry(self.gui)
-        bets.place(relx=0.35, rely=0.8, anchor=CENTER)
-        # self.canvas.itemconfig(bets)
+        self.__input_bet = Entry(self.gui, font=('', 30, 'bold'))
+
+        bets.place(relx=0.55, rely=0.7, anchor=CENTER)
         self.__input_bet.place(relx=0.55, rely=0.8, anchor=CENTER)
 
-        self.open = Button(self.gui, text="OPEN CARD", bg='black', command=self.open_card)
-        self.open.place(relx=0.1, rely=0.6, anchor=CENTER)
-        self.dragon = Button(self.gui, text="DRAGON", bg='red', command=self.choose_dragon)
-        self.dragon.place(relx=0.3, rely=0.6, anchor=CENTER)
-        self.tiger = Button(self.gui, text="TIGER", bg='blue', command=self.choose_tiger)
-        self.tiger.place(relx=0.75, rely=0.6, anchor=CENTER)
-        self.tiger = Button(self.gui, text="DRAW", bg='green', command=self.choose_draw)
-        self.tiger.place(relx=0.53, rely=0.45, anchor=CENTER)
-        self.check = Button(self.gui, text="CONFIRM", command=self.confirm)
-        self.check.place(relx=0.5, rely=0.9, anchor=CENTER)
-        self.check = Button(self.gui, text="EXIT", bg='black', command=self.exit)
-        self.check.place(relx=0.95, rely=0.95, anchor=CENTER)
+        # self.open = Button(self.gui, text="OPEN CARD", fg='red', command=self.open_card, pady=12,
+        #                    font=('', 30, 'bold'))
+        # self.open.place(relx=0.65, rely=0.95, anchor=CENTER)
 
-        self.__chip = Label(text=f"Chips  : {self.__user_chips}")
-        self.__chip.place(relx=0.05, rely=0.05, anchor=CENTER)
+        self.check = Button(self.gui, text="CONFIRM", command=self.confirm, pady=12, font=(None, 30, 'bold'))
+        self.check.place(relx=0.55, rely=0.90, anchor=CENTER)
+
+        self.dragon = Button(self.gui, text="DRAGON", fg='red', command=self.choose_dragon, pady=12, font=(None, 30, 'bold'))
+        self.dragon.place(relx=0.3, rely=0.55, anchor=CENTER)
+
+        self.tiger = Button(self.gui, text="TIGER", fg='blue', command=self.choose_tiger, pady=12,
+                            font=('', 30, 'bold'))
+        self.tiger.place(relx=0.75, rely=0.55, anchor=CENTER)
+
+        self.tiger = Button(self.gui, text="DRAW", fg='white', bg='black', command=self.choose_draw, pady=12, font=(None, 30, 'bold'))
+
+        self.tiger.place(relx=0.53, rely=0.32, anchor=CENTER)
+
+        self.check = Button(self.gui, text="EXIT", fg='red', command=self.exit, pady=12, font=(None, 30, 'bold'))
+        self.check.place(relx=0.92, rely=0.95, anchor=CENTER)
+
+        self.__chip = Label(text=f"Chips  : {self.__user_chips}", pady=12, font=(None, 45, 'bold'))
+        self.__chip.place(relx=0.53, rely=0.05, anchor=CENTER)
         self.gui.mainloop()
 
     @property
@@ -90,8 +99,16 @@ class DragonTiger:
         self.__passChoose = pass_choose
 
     @property
+    def img1(self):
+        return self.__img1
+
+    @property
     def img(self):
         return self.__img
+
+    @img.setter
+    def img1(self, img1):
+        self.__img1 = img1
 
     @img.setter
     def img(self, img):
@@ -147,11 +164,14 @@ class DragonTiger:
         self.display()
 
     def choose_draw(self):
-        back_img = Image.open("img/back_card.png")
+        back_img = Image.open("img/back_card1.png")
         temp_back_img = ImageTk.PhotoImage(back_img)
 
+        back_img_1 = Image.open("img/back_card.png")
+        temp_back_img_1 = ImageTk.PhotoImage(back_img_1)
+
         self.__lbl = Label(image=temp_back_img)
-        self.__lbl1 = Label(image=temp_back_img)
+        self.__lbl1 = Label(image=temp_back_img_1)
 
         self.__choose = 2
         self.display()
@@ -169,7 +189,7 @@ class DragonTiger:
                 else:
 
                     messagebox.showinfo("Success", "Bet Successful")
-                    self.open_card(self)
+                    # self.open_card()
                     self.__passConfirm = TRUE
                     if self.__passChoose == TRUE:
                         Dragon = randint(1, 13)
